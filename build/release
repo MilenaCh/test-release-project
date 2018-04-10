@@ -1,0 +1,46 @@
+#!/bin/sh
+
+ReadVersions() {
+    VERSION_YEAR=`ruby -e "require './build/version.rb'; puts VERSION_YEAR;"`
+    VERSION_Q=`ruby -e "require './build/version.rb'; puts VERSION_Q;"`
+    VERSION=`ruby -e "require './build/version.rb'; puts VERSION;"`
+}
+
+while true; do
+    read -p  "This script will update the branch/tag structure with the new release. Are you sure you want to continue (N/y)? " yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer Y or N.";;
+    esac
+done
+
+echo "OK, continuing..."
+
+git fetch origin;
+git fetch core;
+
+git reset --hard origin/production;
+
+ReadVersions;
+
+MAINTENANCE_BRANCH="${VERSION_YEAR}.R${VERSION_Q}"
+
+git push origin origin/production:refs/heads/$MAINTENANCE_BRANCH
+git push --force origin origin/stable:production
+
+git push core core/production:refs/heads/$MAINTENANCE_BRANCH
+git push --force core core/master:production
+
+git reset --hard origin/stable;
+
+ReadVersions;
+
+git tag -a $VERSION -m "Kendo UI: $VERSION_YEAR R$VERSION_Q" origin/stable
+git push origin $VERSION
+git tag -d $VERSION
+
+git tag -a $VERSION -m "Kendo UI: $VERSION_YEAR R$VERSION_Q" core/master
+git push core $VERSION
+
+echo "Now, make sure that you update the version in VERSION file in master and core-master. After the official build release, you should also add the servicePack flag in production and core-production"

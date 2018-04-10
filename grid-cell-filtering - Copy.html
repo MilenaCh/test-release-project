@@ -1,0 +1,53 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title></title>
+     <link rel="stylesheet" href="http://kendobuild-windows.openstack.progress.com/resources/styles/web/kendo.common.min.css" />
+     <link rel="stylesheet" href="http://kendobuild-windows.openstack.progress.com/resources/styles/web/kendo.material.min.css" />
+     <script src="http://kendobuild-windows.openstack.progress.com/resources/js/jquery.min.js"></script>
+     <script src="http://kendobuild-windows.openstack.progress.com/resources/js/kendo.all.min.js"></script>
+  </head>
+    <body>
+        <script src="js/products.js"></script>
+        <div id="example">
+            <div id="grid"></div>
+            <script>
+                $("#grid").kendoGrid({
+                    selectable: "multiple cell",
+                    pageable: {
+                        input: true,
+                        numeric: false,
+                    },
+                    filterable: true,
+                    columns: [
+                        "ProductName",
+                        { field: "UnitPrice", title: "Unit Price", format: "{0:c}" },
+                        { field: "UnitsInStock", title: "Units In Stock" },
+                        { field: "Discontinued"}
+                    ],
+                    dataSource: {
+                        data: products,
+                        schema: {
+                            model: {
+                                fields: {
+                                    ProductName: { type: "string" },
+                                    UnitPrice: { type: "number" },
+                                    UnitsInStock: { type: "number" },
+                                    Discontinued: { type: "boolean" }
+                                }
+                            }
+                        },
+                        pageSize: 10
+                    },
+                });
+                $(".k-dropdown-operator").click(function () {
+                    var el = $(".k-list-container.k-popup:visible");
+                    el.css("height", "400px");
+                    el.find(".k-list-scroller").css("height", "400px");
+                })
+            </script>
+        </div>
+
+    </body>
+</html>
