@@ -6,17 +6,6 @@ ReadVersions() {
     VERSION=`ruby -e "require './build/version.rb'; puts VERSION;"`
 }
 
-while true; do
-    read -p  "This script will update the branch/tag structure with the new release. Are you sure you want to continue (N/y)? " yn
-    case $yn in
-        [Yy]* ) break;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer Y or N.";;
-    esac
-done
-
-echo "OK, continuing..."
-
 git fetch origin;
 git fetch core;
 
